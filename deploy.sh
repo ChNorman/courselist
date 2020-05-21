@@ -2,7 +2,7 @@
 
 # ----------------------
 # KUDU Deployment Script
-# Version: 1.0.17
+# Version: 1.0.16
 # ----------------------
 
 # Helpers
@@ -99,6 +99,13 @@ selectNodeVersion () {
 # ----------
 
 echo Handling node.js deployment.
+# 0.5 build
+if [[ -e "/build" -ne "0"]]; then
+echo "Running $NPM_CMD build"
+eval $NPM_CMD build
+exitWithMessageOnError "npm build failed"
+  cd - > /dev/null
+fi
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
