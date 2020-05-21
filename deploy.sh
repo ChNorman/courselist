@@ -104,7 +104,7 @@ echo Handling node.js deployment.
 # 3. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   cd "$DEPLOYMENT_SOURCE"
-  if [ -d !"$DEPLOYMENT_SOURCE/node_modules/" ]; then
+  if [ -d "$DEPLOYMENT_SOURCE/node_modules/" ]; then
     echo "Running $NPM_CMD install"
     eval $NPM_CMD "install"
   fi
