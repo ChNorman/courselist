@@ -100,8 +100,6 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 
-# 2. Select node version
-#selectNodeVersion
 
 # 3. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
@@ -111,7 +109,7 @@ if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
     eval $NPM_CMD "install"
   fi
   echo "Running $NPM_CMD build"
-    eval $NPM_CMD "run build"
+  eval $NPM_CMD "run build"
   exitWithMessageOnError "npm build failed"
   cd - > /dev/null
 fi
@@ -124,7 +122,8 @@ if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
-
+# 2. Select node version
+selectNodeVersion
 
 
 
