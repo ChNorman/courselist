@@ -68,6 +68,7 @@ fi
 # ------------
 
 selectNodeVersion () {
+  echo "Starting SelectNodeverion $KUDU_SELECT_NODE_VERSION_CMD"
   if [[ -n "$KUDU_SELECT_NODE_VERSION_CMD" ]]; then
     SELECT_NODE_VERSION="$KUDU_SELECT_NODE_VERSION_CMD \"$DEPLOYMENT_SOURCE/build\" \"$DEPLOYMENT_TARGET\" \"$DEPLOYMENT_TEMP\""
     eval $SELECT_NODE_VERSION
@@ -100,6 +101,8 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 
+# 2. Select node version
+selectNodeVersion
 
 # 3. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
@@ -121,8 +124,7 @@ if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
-# 2. Select node version
-selectNodeVersion
+
 
 
 
