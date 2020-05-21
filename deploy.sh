@@ -100,7 +100,8 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 # 0.5 build
-if [[ -e "$DEPLOYMENT_SOURCE/build" -ne "0"]]; then
+
+if [[ "$DEPLOYMENT_SOURCE/build" -ne "0" ]]; then
 echo "Running $NPM_CMD build"
 eval $NPM_CMD build
 exitWithMessageOnError "npm build failed"
