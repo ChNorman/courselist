@@ -99,14 +99,16 @@ selectNodeVersion () {
 # ----------
 
 echo Handling node.js deployment.
-# 0.5 build
-
-if [[ "$DEPLOYMENT_SOURCE/build" -ne "1" ]]; then
-echo "Running $NPM_CMD build"
-eval $NPM_CMD build
-exitWithMessageOnError "npm build failed"
+# 3. Install npm packages
+if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
+  cd "$DEPLOYMENT_SOURCE"
+  echo "Running $NPM_CMD build"
+  eval $NPM_CMD build --production
+  exitWithMessageOnError "npm build failed"
   cd - > /dev/null
 fi
+
+
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
@@ -117,14 +119,7 @@ fi
 # 2. Select node version
 selectNodeVersion
 
-# 3. Install npm packages
-if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
-  cd "$DEPLOYMENT_TARGET"
-  echo "Running $NPM_CMD install --production"
-  eval $NPM_CMD install --production
-  exitWithMessageOnError "npm failed"
-  cd - > /dev/null
-fi
+
 
 ##################################################################################################################################
 echo "Finished successfully."
