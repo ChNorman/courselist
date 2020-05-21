@@ -104,10 +104,9 @@ echo Handling node.js deployment.
 # 3. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   cd "$DEPLOYMENT_SOURCE"
-  if [ -d "$DEPLOYMENT_SOURCE/node_modules/" ]; then
-    echo "Running $NPM_CMD install"
-    eval $NPM_CMD "install"
-  fi
+  echo "Running $NPM_CMD install"
+  eval $NPM_CMD "install"
+  
   echo "Running $NPM_CMD build"
   eval $NPM_CMD "run build"
   exitWithMessageOnError "npm build failed"
