@@ -103,6 +103,7 @@ echo Handling node.js deployment.
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   cd "$DEPLOYMENT_SOURCE"
   echo "Running $NPM_CMD build"
+  eval $NPM_CMD install
   eval $NPM_CMD build
   exitWithMessageOnError "npm build failed"
   cd - > /dev/null
