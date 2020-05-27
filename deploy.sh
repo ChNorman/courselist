@@ -104,12 +104,6 @@ echo Handling node.js deployment.
 # 1. Select node version
 selectNodeVersion
 
-# 2. Update NPM to latest version
-# 
-echo "Running $NPM_CMD install npm@latest"
-eval $NPM_CMD "install npm@latest"
-#  echo 
-
 # 2. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   cd "$DEPLOYMENT_SOURCE"
@@ -126,7 +120,7 @@ fi
 # 4. KuduSync (Copy optimized build files to /home/site/wwwroot)
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/build" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
-  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/startup.sh" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
+  eval cp "$DEPLOYMENT_SOURCE/startup.sh" "$DEPLOYMENT_TARGET"
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
