@@ -11,4 +11,4 @@ if [ -z "$PORT" ]; then
 fi
 
 export NODE_OPTIONS='--require ./oryx-appinsightsloader.js ' $NODE_OPTIONS
-pm2 start --no-daemon /home/site/wwwroot
+export pm2 start --no-daemon /home/site/wwwroot
