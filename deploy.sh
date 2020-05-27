@@ -94,6 +94,9 @@ selectNodeVersion () {
     NPM_CMD=npm
     NODE_EXE=node
   fi
+
+  echo '$NPM_CMD -v' 
+  echo '$node -v'
 }
 
 ##################################################################################################################################
@@ -102,26 +105,30 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 
-# 2. Select node version
+# 1. Select node version
 selectNodeVersion
 
-# 3. Install npm packages
+# 2. Update NPM to latest version
+ 
+ eval $NPM_CMD "install npm/latest"
+
+# 2. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   cd "$DEPLOYMENT_SOURCE"
   echo "Running $NPM_CMD install"
-  eval $NPM_CMD "install"
-  
+  eval $NPM_CMD "install --production"
+
+# 3. Use Framework Build Scripts
   echo "Running $NPM_CMD build"
   eval $NPM_CMD "run build"
   exitWithMessageOnError "npm build failed"
   cd - > /dev/null
 fi
 
-
-
-# 1. KuduSync
+# 4. KuduSync (Copy optimized build files to /home/site/wwwroot)
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/build" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
+  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/startup.sh" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
