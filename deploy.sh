@@ -71,7 +71,6 @@ selectNodeVersion () {
   echo "Starting SelectNodeverion $KUDU_SELECT_NODE_VERSION_CMD"
   if [[ -n "$KUDU_SELECT_NODE_VERSION_CMD" ]]; then
     SELECT_NODE_VERSION="$KUDU_SELECT_NODE_VERSION_CMD \"$DEPLOYMENT_SOURCE\" \"$DEPLOYMENT_TARGET\" \"$DEPLOYMENT_TEMP\""
-    echo $SELECT_NODE_VERSION
     eval $SELECT_NODE_VERSION
     exitWithMessageOnError "select node version failed"
 
@@ -94,9 +93,6 @@ selectNodeVersion () {
     NPM_CMD=npm
     NODE_EXE=node
   fi
-
-  echo '$NPM_CMD -v' 
-  echo '$node -v'
 }
 
 ##################################################################################################################################
@@ -109,8 +105,9 @@ echo Handling node.js deployment.
 selectNodeVersion
 
 # 2. Update NPM to latest version
- 
- eval $NPM_CMD "install npm/latest"
+# 
+# if [eval $NPM_CMD "install npm/latest"]; then
+#  echo 
 
 # 2. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
@@ -128,7 +125,7 @@ fi
 # 4. KuduSync (Copy optimized build files to /home/site/wwwroot)
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/build" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
-  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/startup.sh" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
+ # "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/startup.sh" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
